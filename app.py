@@ -34,8 +34,8 @@ def user_input_features():
     sleepTime = st.sidebar.slider('수면 시간', 0.0, 24.0, 8.0)
     sleepQuality = st.sidebar.slider('수면의 질', 0.0, 10.0, 8.0)
     stress = st.sidebar.slider('스트레스', 0.0, 10.0, 5.0)
-    hoursWorked = st.sidebar.slider('근무 시간', 0.0, 24.0, 8.0)
-    
+    hoursWorked = st.sidebar.slider('운동량/활동 지수', 0.0, 24.0, 8.0)
+ 
     # Felt Rested (Assuming it was binary 0/1)
     feltRested_label = st.sidebar.selectbox('충분히 휴식한 느낌', ['네', '아니요'])
     feltRested = 1 if feltRested_label == '네' else 0
