@@ -5,17 +5,17 @@
 ---
 
 ## 주요 기능
-- **인지 능력 예측**: 수면 시간, 수면의 질, 스트레스 수준, 근무 시간, 심리 상태 등의 데이터를 입력하면 모델이 즉각적으로 예상 인지 점수(100점 만점)를 도출합니다.
+- **인지 능력 예측**: 수면 시간, 수면의 질, 스트레스 수준, 운동량/활동 지수, 정신 건강 상태 등의 데이터를 입력하면 모델이 즉각적으로 예상 인지 점수(100점 만점)를 도출합니다.
 - **맞춤형 피드백 제공**: 예측된 점수 구간에 따라 상태 양호 / 보통 / 주의 필요 등의 경고 메시지 및 상태 조언을 출력합니다.
 - **모델 의사결정 시각화**: 모델 예측에 가장 큰 영향을 미치는 입력 변수들의 Feature Importance(피처 중요도) 그래프를 대시보드를 통해 직관적으로 분석할 수 있습니다.
-- **검증된 성능 지표**: R² Score 0.93 과 평균 오차율(MAE) 4.61의 높은 예측 성능을 바탕으로 신뢰도 높은 분석을 수행합니다.
+- **검증된 성능 지표**: 하이퍼파라미터 튜닝을 거친 앙상블 모델(XGBoost)을 통해 **R² Score 0.80, MAE 7.97, RMSE 9.94** 수준의 안정적이고 신뢰도 높은 예측 분석을 수행합니다.
 
 ---
 
 ## 기술 스택 (Tech Stack)
 - **언어**: Python 3
 - **프론트엔드 및 데이터 대시보드**: [Streamlit](https://streamlit.io/)
-- **머신러닝 파이프라인**: Scikit-Learn (`joblib`을 이용한 모델 로드)
+- **머신러닝 파이프라인**: Scikit-Learn, XGBoost (`joblib`을 이용한 모델 및 전처리 객체 로드)
 - **데이터 처리**: Pandas, NumPy
 - **시각화 (학습 시)**: Matplotlib, Seaborn
 
@@ -44,7 +44,7 @@ Week 2/
 1. **필수 라이브러리 설치**
    앱을 실행하기 위해 필요한 Python 패키지들을 설치합니다. 환경에 따라 로컬 또는 가상환경(예: `.venv`)에서 실행하세요.
    ```bash
-   pip install streamlit pandas scikit-learn matplotlib seaborn joblib
+   pip install streamlit pandas scikit-learn matplotlib seaborn joblib xgboost
    ```
 
 2. **애플리케이션(Streamlit) 실행**

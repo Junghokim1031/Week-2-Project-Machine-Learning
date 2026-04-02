@@ -71,7 +71,7 @@ features = user_input_features()
 #==================
 # 메인 화면 구성
 #==================
-st.title('인지 능력 분석 대시보드 (XGBoost 적용)')
+st.title('인지 능력 분석 대시보드')
 
 # 탭 구성
 tab1, tab2 = st.tabs(["인지 능력 예측", "모델 성능 지표"])
