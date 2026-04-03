@@ -37,46 +37,40 @@ model_cog, scaler_cog, encoder_cog, model_sleep, scaler_sleep = load_assets()
 #==================
 def user_input_features():
     st.sidebar.markdown("### 개인 건강 정보")
-    gender = st.sidebar.selectbox('성별', ['남성', '여성'])
+    # 성별, 업무 시간, 신체 활동량을 모두 더미 데이터(기본값)로 대체합니다.
+    dummy_gender = 1 # 남성 기본값
+    dummy_physical_activity = 60.0 
+    dummy_work_hours = 8.0 
+    
     age = st.sidebar.number_input('나이', 10, 100, 30)
     bmi_category = st.sidebar.selectbox('BMI 카테고리', ['정상 체중', '과체중', '비만'])
     
     st.sidebar.markdown("### 활동 및 신체 지표")
-    physical_activity = st.sidebar.slider('신체 활동량 (분)', 0, 120, 60)
     daily_steps = st.sidebar.slider('일일 걸음 수', 0, 20000, 8000)
-    heart_rate = st.sidebar.slider('심박수', 40, 120, 75)
+    heart_rate = st.sidebar.slider('심박수 (평상시)', 40, 120, 75)
     
-    st.sidebar.markdown("### 혈압 정보")
-    bp_sys = st.sidebar.slider('수축기 혈압 (Systolic)', 80, 180, 120)
-    bp_dia = st.sidebar.slider('이완기 혈압 (Diastolic)', 50, 120, 80)
-    
-    st.sidebar.markdown("### 수면 및 인지 예측 정보")
+    st.sidebar.markdown("### 혈압 및 수면 정보")
+    bp_sys = st.sidebar.slider('수축기 혈압', 80, 180, 120)
+    bp_dia = st.sidebar.slider('이완기 혈압', 50, 120, 80)
     sleep_duration_hrs = st.sidebar.slider('수면 시간', 0.0, 24.0, 8.0)
     stress_score = st.sidebar.slider('스트레스 지수', 0.0, 10.0, 5.0)
     
-    # 추가 인지 모델용 피처
     felt_rested_label = st.sidebar.selectbox('충분히 휴식한 느낌', ['네', '아니요'])
     mental_sel = st.sidebar.selectbox('정신 건강 상태', ['없음(건강)', '불안증', '우울증', '불안&우울증'])
     sleep_disorder = st.sidebar.selectbox('수면 장애 여부', ['없음', '있음(불면증/무호흡증)'])
-
-    # 전처리용 매핑
-    gender_map = {'남성': 1, '여성': 2}
+    # 매핑 로직 (사이드바 입력이 있는 것들만)
     bmi_map = {'정상 체중': 1, '과체중': 2, '비만': 3}
     disorder_map = {'없음': 0, '있음(불면증/무호흡증)': 1}
     mental_map = {'없음(건강)': 0, '불안증': 1, '우울증': 2, '불안&우울증': 3}
     rested_map = {'네': 1, '아니요': 0}
-
-    # 수면 모델용 피처 계산
-    map_score = (bp_sys + (2 * bp_dia)) / 3 # Mean Arterial Pressure
-    
-    # 활동 점수 계산 (학습 데이터 기준 정규화)
-    activity_norm = (physical_activity - 59.17) / 20.83
+    # 연산 처리
+    map_score = (bp_sys + (2 * bp_dia)) / 3
+    activity_norm = (dummy_physical_activity - 59.17) / 20.83
     steps_norm = (daily_steps - 6816.85) / 1617.92
     overall_activity = (activity_norm + steps_norm) / 2
-
-    # 수면 모델 입력 데이터
+    # 수면 모델 입력 데이터프레임 (dummy_gender 적용)
     sleep_features = pd.DataFrame({
-        'Gender': [gender_map[gender]],
+        'Gender': [dummy_gender],
         'Age': [age],
         'BMI Category': [bmi_map[bmi_category]],
         'Heart Rate': [heart_rate],
@@ -85,16 +79,15 @@ def user_input_features():
         'Overall_Activity_Score': [overall_activity]
     })
     
-    # 인지 모델용 추가 데이터
+    # 인지 모델용 피처 구성 (dummy_work_hours 적용)
     cog_base_data = {
         'sleep_duration_hrs': sleep_duration_hrs,
         'stress_score': stress_score,
-        'work_hours_that_day': physical_activity / 30.0,
+        'work_hours_that_day': dummy_work_hours,
         'mental_health_condition': mental_map[mental_sel],
         'felt_rested': rested_map[felt_rested_label],
         'sleep_disorder_risk': disorder_map[sleep_disorder] * 2
     }
-
     return sleep_features, cog_base_data
 
 sleep_features, cog_base_data = user_input_features()
